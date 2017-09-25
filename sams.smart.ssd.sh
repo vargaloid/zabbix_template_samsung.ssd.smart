@@ -20,7 +20,7 @@ DISKS=$(lsblk -S | grep "Samsung SSD"| grep "disk" | grep "ATA" | awk '{print $1
 
     for label in $DISKS
     do
-    echo -n "$label Device" >> ${IFILE}
+    echo "$label Device" >> ${IFILE}
     echo -n "$label v5 " >> ${IFILE} && smartctl -A /dev/$label | grep "Reallocated_Sector_Ct" | awk '{print $10}' >> ${IFILE}
     echo -n "$label v9 " >> ${IFILE} && smartctl -A /dev/$label | grep "Power_On_Hours" | awk '{print $10}' >> ${IFILE}
     echo -n "$label v177 " >> ${IFILE} && smartctl -A /dev/$label | grep "Wear_Leveling_Count" | awk '{print $4}' >> ${IFILE}
@@ -29,7 +29,7 @@ DISKS=$(lsblk -S | grep "Samsung SSD"| grep "disk" | grep "ATA" | awk '{print $1
     TOTAL_LBA_WRITTEN=$(smartctl -A /dev/$label | grep "Total_LBAs_Written" | awk '{print $10}')
     BYTES_WRITTEN=$(echo "$TOTAL_LBA_WRITTEN * $LBA_SIZE" | bc)
     TB_WRITTEN=$(echo "$BYTES_WRITTEN / $BYTES_PER_TB" | bc)
-    echo -n "$label v241 $TB_WRITTEN" >> ${IFILE}
+    echo "$label v241 $TB_WRITTEN" >> ${IFILE}
     done
 
 #Make file for discovery
