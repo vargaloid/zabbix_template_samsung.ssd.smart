@@ -32,6 +32,35 @@ DISKS=$(lsblk -S | grep "Samsung SSD"| grep "disk" | grep "ATA" | awk '{print $1
     echo "$label v241 $TB_WRITTEN" >> ${IFILE}
     done
 
+##RAID values
+DISKS_RAID=$(lsblk -S | grep "disk" | grep -v "ATA" | awk '{print $1}')
+
+    if [ -n "$DISKS_RAID" ]
+    then
+    DISKS_RAID_ID=$(megacli -pdlist -a0| grep 'Device Id' | awk -F ': ' '{print $2}')
+    	for raid_label in $DISKS_RAID
+    	do
+        	for megaraid_id in $DISKS_RAID_ID
+        	do
+			DISK_SAMS=$(smartctl -A -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Samsung SSD")
+			if [ -n "$DISK_SAMS" ]
+			then
+				echo "$(raid_label).megaraid.$megaraid_id Device" >> ${IFILE}
+    				echo -n "$(raid_label).megaraid.$megaraid_id v5 " >> ${IFILE} && smartctl -A -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Reallocated_Sector_Ct" | awk '{print $10}' >> ${IFILE}
+    				echo -n "$(raid_label).megaraid.$megaraid_id v9 " >> ${IFILE} && smartctl -A -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Power_On_Hours" | awk '{print $10}' >> ${IFILE}
+    				echo -n "$(raid_label).megaraid.$megaraid_id v177 " >> ${IFILE} && smartctl -A -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Wear_Leveling_Count" | awk '{print $4}' >> ${IFILE}
+    				echo -n "$(raid_label).megaraid.$megaraid_id v179 " >> ${IFILE} && smartctl -A -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Used_Rsvd_Blk_Cnt_Tot" | awk '{print $10}' >> ${IFILE}
+    				echo -n "$(raid_label).megaraid.$megaraid_id v183 " >> ${IFILE} && smartctl -A -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Runtime_Bad_Block" | awk '{print $10}' >> ${IFILE}
+    				RAID_TOTAL_LBA_WRITTEN=$(smartctl -A -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Total_LBAs_Written" | awk '{print $10}')
+    				RAID_BYTES_WRITTEN=$(echo "$RAID_TOTAL_LBA_WRITTEN * $LBA_SIZE" | bc)
+    				RAID_TB_WRITTEN=$(echo "$RAID_BYTES_WRITTEN / $BYTES_PER_TB" | bc)
+    				echo "$(raid_label).megaraid.$megaraid_id v241 $RAID_TB_WRITTEN" >> ${IFILE}
+        			
+			fi
+        	done
+    	done
+    fi
+
 #Make file for discovery
 echo '{ "data": [' > ${DFILE}
 
