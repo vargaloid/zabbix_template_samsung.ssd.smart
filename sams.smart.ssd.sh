@@ -45,16 +45,16 @@ DISKS_RAID=$(lsblk -S | grep "disk" | grep -v "ATA" | awk '{print $1}')
 			DISK_SAMS=$(smartctl -i -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Samsung SSD")
 			if [ -n "$DISK_SAMS" ]
 			then
-				echo "$(raid_label).megaraid.$megaraid_id Device" >> ${IFILE}
-    				echo -n "$(raid_label).megaraid.$megaraid_id v5 " >> ${IFILE} && smartctl -A -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Reallocated_Sector_Ct" | awk '{print $10}' >> ${IFILE}
-    				echo -n "$(raid_label).megaraid.$megaraid_id v9 " >> ${IFILE} && smartctl -A -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Power_On_Hours" | awk '{print $10}' >> ${IFILE}
-    				echo -n "$(raid_label).megaraid.$megaraid_id v177 " >> ${IFILE} && smartctl -A -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Wear_Leveling_Count" | awk '{print $4}' >> ${IFILE}
-    				echo -n "$(raid_label).megaraid.$megaraid_id v179 " >> ${IFILE} && smartctl -A -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Used_Rsvd_Blk_Cnt_Tot" | awk '{print $10}' >> ${IFILE}
-    				echo -n "$(raid_label).megaraid.$megaraid_id v183 " >> ${IFILE} && smartctl -A -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Runtime_Bad_Block" | awk '{print $10}' >> ${IFILE}
-    				RAID_TOTAL_LBA_WRITTEN=$(smartctl -A -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Total_LBAs_Written" | awk '{print $10}')
+				echo "${raid_label}.megaraid.$megaraid_id Device" >> ${IFILE}
+    				echo -n "${raid_label}.megaraid.$megaraid_id v5 " >> ${IFILE} && smartctl -A -d sat+megaraid,$megaraid_id /dev/${raid_label} | grep "Reallocated_Sector_Ct" | awk '{print $10}' >> ${IFILE}
+    				echo -n "${raid_label}.megaraid.$megaraid_id v9 " >> ${IFILE} && smartctl -A -d sat+megaraid,$megaraid_id /dev/${raid_label} | grep "Power_On_Hours" | awk '{print $10}' >> ${IFILE}
+    				echo -n "${raid_label}.megaraid.$megaraid_id v177 " >> ${IFILE} && smartctl -A -d sat+megaraid,$megaraid_id /dev/${raid_label} | grep "Wear_Leveling_Count" | awk '{print $4}' >> ${IFILE}
+    				echo -n "${raid_label}.megaraid.$megaraid_id v179 " >> ${IFILE} && smartctl -A -d sat+megaraid,$megaraid_id /dev/${raid_label} | grep "Used_Rsvd_Blk_Cnt_Tot" | awk '{print $10}' >> ${IFILE}
+    				echo -n "${raid_label}.megaraid.$megaraid_id v183 " >> ${IFILE} && smartctl -A -d sat+megaraid,$megaraid_id /dev/${raid_label} | grep "Runtime_Bad_Block" | awk '{print $10}' >> ${IFILE}
+    				RAID_TOTAL_LBA_WRITTEN=$(smartctl -A -d sat+megaraid,$megaraid_id /dev/${raid_label} | grep "Total_LBAs_Written" | awk '{print $10}')
     				RAID_BYTES_WRITTEN=$(echo "$RAID_TOTAL_LBA_WRITTEN * $LBA_SIZE" | bc)
     				RAID_TB_WRITTEN=$(echo "$RAID_BYTES_WRITTEN / $BYTES_PER_TB" | bc)
-    				echo "$(raid_label).megaraid.$megaraid_id v241 $RAID_TB_WRITTEN" >> ${IFILE}
+    				echo "${raid_label}.megaraid.$megaraid_id v241 $RAID_TB_WRITTEN" >> ${IFILE}
         			
 			fi
         	done
