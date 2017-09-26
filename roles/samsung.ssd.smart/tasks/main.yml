@@ -11,11 +11,23 @@
   apt: name={{ item }}
   with_items:
     - bc
-    - megacli
     - smartmontools
 
+# create a directory if it doesn't exist 
+- file:
+    path: /etc/zabbix/bin
+    state: directory
+    owner: zabbix
+    group: zabbix
+    mode: 0755
+
 - name: Installing sams.smart.ssd.sh
-  template: src="sams.smart.ssd.sh" dest="/etc/zabbix/bin/sams.smart.ssd.sh" owner="zabbix" group="zabbix"   mode=755
+  copy: 
+    src="/root/scripts/ansible/roles/samsung.ssd.smart/templates/sams.smart.ssd.sh" 
+    dest="/etc/zabbix/bin/sams.smart.ssd.sh" 
+    owner="zabbix" 
+    group="zabbix"   
+    mode=755
 
 - name: Updating sudoers
   lineinfile:
@@ -27,7 +39,7 @@
 - name: Updating zabbix_agentd.conf
   lineinfile:
     dest: /etc/zabbix/zabbix_agentd.conf
-    line: 'UserParameter=smartd.value[*],cat /tmp/z.sams.ssd.smart.items.txt | grep $1 | grep $2 | awk \'{print $ 3+0}\' '
+    line: "UserParameter=smartd.value[*],cat /tmp/z.sams.ssd.smart.items.txt | grep $1 | grep $2 | awk '{print $ 3+0}' "
 
 - name: Checking zabbix
   service: name=zabbix-agent enabled=yes state=restarted
