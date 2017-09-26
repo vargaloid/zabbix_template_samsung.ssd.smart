@@ -15,7 +15,7 @@
     - smartmontools
 
 - name: Installing sams.smart.ssd.sh
-  template: src="sams.smart.ssd.sh" dest="/etc/zabbix/bin/sams.smart.ssd.sh" owner="zabbix" group="zabbix"   mode=0640
+  template: src="sams.smart.ssd.sh" dest="/etc/zabbix/bin/sams.smart.ssd.sh" owner="zabbix" group="zabbix"   mode=755
 
 blockinfile: Updating sudoers
     path: /etc/sudoers
