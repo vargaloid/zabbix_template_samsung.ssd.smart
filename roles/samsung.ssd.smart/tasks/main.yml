@@ -1,0 +1,32 @@
+---
+################### 
+
+- name: Update apt cache
+  apt: update_cache=yes
+
+- shell: dpkg-query -l 'zabbix-agent'
+  ignore_errors: yes
+
+- name: Install required packages
+  apt: name={{ item }}
+  with_items:
+    - bc
+    - megacli
+    - smartmontools
+
+- name: Installing sams.smart.ssd.sh
+  template: src="sams.smart.ssd.sh" dest="/etc/zabbix/bin/sams.smart.ssd.sh" owner="zabbix" group="zabbix"   mode=0640
+
+blockinfile: Updating sudoers
+    path: /etc/sudoers
+    block: |
+	zabbix ALL=NOPASSWD: /etc/zabbix/bin/sams.smart.ssd.sh
+
+blockinfile: Updating zabbix_agentd.conf
+    path: /etc/zabbix/zabbix_agentd.conf
+    block: |
+	######### Samsung SMART SSD
+	UserParameter=smartd.value[*],cat /tmp/z.sams.ssd.smart.items.txt | grep $1 | grep $2 | awk '{print $ 3+0}' 
+
+- name: Checking zabbix
+  service: name=zabbix-agent enabled=yes state=restarted
