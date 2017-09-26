@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>3.2</version>
-    <date>2017-09-25T11:37:01Z</date>
+    <date>2017-09-26T10:00:48Z</date>
     <groups>
         <group>
             <name>Self Made</name>
@@ -73,7 +73,7 @@
                     <type>0</type>
                     <snmp_community/>
                     <snmp_oid/>
-                    <key>system.run[cat /tmp/disk.ssd.txt]</key>
+                    <key>system.run[cat /tmp/z.sams.ssd.smart.discovery.txt]</key>
                     <delay>3600</delay>
                     <status>0</status>
                     <allowed_hosts/>
@@ -99,7 +99,7 @@
                         <conditions/>
                     </filter>
                     <lifetime>30</lifetime>
-                    <description/>
+                    <description>system.run[cat /tmp/disk.ssd.txt]</description>
                     <item_prototypes>
                         <item_prototype>
                             <name>SSD Reallocated_Sector_Ct - {#DISK}</name>
