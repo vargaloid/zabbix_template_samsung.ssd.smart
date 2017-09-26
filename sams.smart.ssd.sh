@@ -42,7 +42,7 @@ DISKS_RAID=$(lsblk -S | grep "disk" | grep -v "ATA" | awk '{print $1}')
     	do
         	for megaraid_id in $DISKS_RAID_ID
         	do
-			DISK_SAMS=$(smartctl -A -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Samsung SSD")
+			DISK_SAMS=$(smartctl -i -d sat+megaraid,$megaraid_id /dev/$raid_label | grep "Samsung SSD")
 			if [ -n "$DISK_SAMS" ]
 			then
 				echo "$(raid_label).megaraid.$megaraid_id Device" >> ${IFILE}
