@@ -1,16 +1,25 @@
 ---
 ################### 
 
-- name: Update apt cache
-  apt: update_cache=yes
-
 - shell: dpkg-query -l 'zabbix-agent'
   ignore_errors: yes
+
+- apt_repository:
+    repo: deb http://hwraid.le-vert.net/debian stretch main
+    when: ansible_distribution_release == 'stretch'
+
+- apt_repository:
+    repo: deb http://hwraid.le-vert.net/debian jessie main
+    when: ansible_distribution_release == 'jessie'
+
+- name: Update apt cache
+  apt: update_cache=yes
 
 - name: Install required packages
   apt: name={{ item }}
   with_items:
     - bc
+    - megacli
     - smartmontools
 
 # create a directory if it doesn't exist 
