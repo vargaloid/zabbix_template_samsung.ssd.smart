@@ -4,13 +4,13 @@
 - shell: dpkg-query -l 'zabbix-agent'
   ignore_errors: yes
 
-- apt_repository:
-    repo: deb http://hwraid.le-vert.net/debian stretch main
-    when: ansible_distribution_release == 'stretch'
+- apt_key:
+    url: https://hwraid.le-vert.net/debian/hwraid.le-vert.net.gpg.key
+    state: present
 
 - apt_repository:
-    repo: deb http://hwraid.le-vert.net/debian jessie main
-    when: ansible_distribution_release == 'jessie'
+    repo: deb http://hwraid.le-vert.net/debian {{ ansible_distribution_release }} main
+    state: present
 
 - name: Update apt cache
   apt: update_cache=yes
