@@ -1,4 +1,6 @@
 ---
 - hosts: '{{ hosts }}'
-  roles: 
+  become: yes
+#  remote_user: USERNAME
+  roles:
     - samsung.ssd.smart
