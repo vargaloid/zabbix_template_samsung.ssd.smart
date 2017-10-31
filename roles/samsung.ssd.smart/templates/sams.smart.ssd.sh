@@ -33,7 +33,7 @@ DISKS=$(lsblk -S | grep "Samsung SSD"| grep "disk" | grep "ATA" | awk '{print $1
     done
 
 ##RAID values
-DISKS_RAID=$(lsblk -S | grep "disk" | grep -v "ATA" | awk '{print $1}')
+DISKS_RAID=$(lsblk -S | grep "Samsung SSD" | grep "disk" | grep -v "ATA" | awk '{print $1}')
 
     if [ -n "$DISKS_RAID" ]
     then
