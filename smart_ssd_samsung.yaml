@@ -1,0 +1,167 @@
+zabbix_export:
+  version: '6.0'
+  date: '2023-10-25T12:39:10Z'
+  groups:
+    -
+      uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    -
+      uuid: 17bd5baefcd3452e8e6e78437a4a0a61
+      template: 'S.M.A.R.T. SSD Samsung'
+      name: 'S.M.A.R.T. SSD Samsung'
+      groups:
+        -
+          name: Templates
+      discovery_rules:
+        -
+          uuid: bd49a29f9b8446bbacffde8c59708b64
+          name: Disks
+          key: ssd.discovery
+          delay: 12h
+          lifetime: 7d
+          item_prototypes:
+            -
+              uuid: 9fc2166f23e24cf7b2418b4c7dded644
+              name: '{#SSDDISK} Model'
+              key: 'ssd.model[{#SSDDISK}]'
+              delay: 6h
+              history: 1w
+              trends: '0'
+              value_type: TEXT
+              tags:
+                -
+                  tag: disk
+                  value: '{#SSDDISK}'
+                -
+                  tag: disktype
+                  value: ssd
+            -
+              uuid: 3ddbc8caf1f847efac0bbf56e771063e
+              name: '{#SSDDISK} Serial Number'
+              key: 'ssd.serial[{#SSDDISK}]'
+              delay: 6h
+              history: 1w
+              trends: '0'
+              value_type: TEXT
+              tags:
+                -
+                  tag: disk
+                  value: '{#SSDDISK}'
+                -
+                  tag: disktype
+                  value: ssd
+            -
+              uuid: 40bcab1517e0465585c6344d7747de3c
+              name: '{#SSDDISK} Reallocated Sectors'
+              key: 'ssd.v5[{#SSDDISK}]'
+              delay: 6h
+              history: 1w
+              tags:
+                -
+                  tag: disk
+                  value: '{#SSDDISK}'
+                -
+                  tag: disktype
+                  value: ssd
+              trigger_prototypes:
+                -
+                  uuid: d4a06985842b43d9b9c688d3cf1cbf3f
+                  expression: 'last(/S.M.A.R.T. SSD Samsung/ssd.v5[{#SSDDISK}])>0'
+                  name: '{#SSDDISK} -- Reallocated sectors'
+                  priority: HIGH
+            -
+              uuid: 79b39bdde7f04cc6b5c3bffd9ad9c61c
+              name: '{#SSDDISK} Power on hours'
+              key: 'ssd.v9[{#SSDDISK}]'
+              delay: 6h
+              history: 1w
+              tags:
+                -
+                  tag: disk
+                  value: '{#SSDDISK}'
+                -
+                  tag: disktype
+                  value: ssd
+            -
+              uuid: d4a89cec65a44de6a570bce77d191abb
+              name: '{#SSDDISK} Wear Leveling Count'
+              key: 'ssd.v177[{#SSDDISK}]'
+              delay: 6h
+              history: 1w
+              tags:
+                -
+                  tag: disk
+                  value: '{#SSDDISK}'
+                -
+                  tag: disktype
+                  value: ssd
+              trigger_prototypes:
+                -
+                  uuid: 445888794f4c4f0ea4bada94eaa88104
+                  expression: 'last(/S.M.A.R.T. SSD Samsung/ssd.v177[{#SSDDISK}])<10'
+                  name: '{#SSDDISK} -- Lifetime'
+                  priority: HIGH
+            -
+              uuid: 73bba4ffe7994494b32adc8cf904afac
+              name: '{#SSDDISK} Used_Rsvd_Blk_Cnt_Tot'
+              key: 'ssd.v179[{#SSDDISK}]'
+              delay: 6h
+              history: 1w
+              tags:
+                -
+                  tag: disk
+                  value: '{#SSDDISK}'
+                -
+                  tag: disktype
+                  value: ssd
+              trigger_prototypes:
+                -
+                  uuid: aa46f470aa1545a3bdcb894368c31333
+                  expression: 'last(/S.M.A.R.T. SSD Samsung/ssd.v179[{#SSDDISK}])>0'
+                  name: '{#SSDDISK} -- Used_Rsvd_Blk_Cnt_Tot'
+                  priority: WARNING
+            -
+              uuid: d479d316872640bc86356c2a8f264e57
+              name: '{#SSDDISK} Runtime_Bad_Block'
+              key: 'ssd.v183[{#SSDDISK}]'
+              delay: 6h
+              history: 1w
+              tags:
+                -
+                  tag: disk
+                  value: '{#SSDDISK}'
+                -
+                  tag: disktype
+                  value: ssd
+              trigger_prototypes:
+                -
+                  uuid: e781575f5f9c497f8f4e8241768cdf29
+                  expression: 'last(/S.M.A.R.T. SSD Samsung/ssd.v183[{#SSDDISK}])>0'
+                  name: '{#SSDDISK} -- Runtime_Bad_Block'
+                  priority: WARNING
+            -
+              uuid: 7ebca79b8dff4806a83a107f6dee5959
+              name: '{#SSDDISK} Total TB Written'
+              key: 'ssd.v241[{#SSDDISK}]'
+              delay: 6h
+              history: 1w
+              value_type: FLOAT
+              preprocessing:
+                -
+                  type: MULTIPLIER
+                  parameters:
+                    - '4.6566129e-10'
+              tags:
+                -
+                  tag: disk
+                  value: '{#SSDDISK}'
+                -
+                  tag: disktype
+                  value: ssd
+              trigger_prototypes:
+                -
+                  uuid: f274750c2ba6460e8c87b34fd7b3899b
+                  expression: 'last(/S.M.A.R.T. SSD Samsung/ssd.v241[{#SSDDISK}])>500'
+                  name: '{#SSDDISK} -- Total TB Written'
+                  priority: WARNING
